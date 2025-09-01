@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makhana Ops - Business Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <span class="hamburger"></span>
+            </button>
+            <div class="logo">
+                <h1>Makhana Ops</h1>
+                <span class="tagline">Business Intelligence</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <select class="member-switcher" id="memberSwitcher">
+                <option value="">All Members</option>
+                <option value="1">Rishabh</option>
+                <option value="2">Navneet</option>
+                <option value="3">Abhishek</option>
+                <option value="4">Abhinav</option>
+            </select>
+            <button class="btn btn--primary export-btn" id="exportBtn">
+                <span class="icon">📊</span>
+                Export XLSX
+            </button>
+            <div class="user-profile">
+                <div class="avatar">R</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="nav">
+            <a href="#" class="nav-item active" data-section="overview">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Overview</span>
+            </a>
+            <a href="#" class="nav-item" data-section="members">
+                <span class="nav-icon">👥</span>
+                <span class="nav-label">Members</span>
+            </a>
+            <a href="#" class="nav-item" data-section="investments">
+                <span class="nav-icon">💰</span>
+                <span class="nav-label">Investments</span>
+            </a>
+            <a href="#" class="nav-item" data-section="production">
+                <span class="nav-icon">🏭</span>
+                <span class="nav-label">Production</span>
+            </a>
+            <a href="#" class="nav-item" data-section="costs">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">Costs</span>
+            </a>
+            <a href="#" class="nav-item" data-section="logistics">
+                <span class="nav-icon">🚚</span>
+                <span class="nav-label">Logistics</span>
+            </a>
+            <a href="#" class="nav-item" data-section="sales">
+                <span class="nav-icon">📈</span>
+                <span class="nav-label">Sales</span>
+            </a>
+            <a href="#" class="nav-item" data-section="pl">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">P&L</span>
+            </a>
+            <a href="#" class="nav-item" data-section="network">
+                <span class="nav-icon">🤝</span>
+                <span class="nav-label">Network</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Overview Section -->
+        <section id="overview-section" class="section active">
+            <div class="section-header">
+                <h2>Business Overview</h2>
+                <p>Real-time insights into your makhana operations</p>
+            </div>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon">💰</div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="monthlyRevenue">₹2,85,000</div>
+                        <div class="kpi-label">Monthly Revenue</div>
+                        <div class="kpi-change positive">+12.5%</div>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon">📊</div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="grossProfit">₹1,05,000</div>
+                        <div class="kpi-label">Gross Profit</div>
+                        <div class="kpi-change positive">+8.3%</div>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon">📈</div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="profitMargin">36.8%</div>
+                        <div class="kpi-label">Profit Margin</div>
+                        <div class="kpi-change positive">+2.1%</div>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon">🏭</div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" id="productionBatches">12</div>
+                        <div class="kpi-label">Production Batches</div>
+                        <div class="kpi-change neutral">+3</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Revenue Trend</h3>
+                    <div class="chart-container" style="position: relative; height: 300px;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3>Cost Breakdown</h3>
+                    <div class="chart-container" style="position: relative; height: 300px;">
+                        <canvas id="costsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Members Section -->
+        <section id="members-section" class="section">
+            <div class="section-header">
+                <h2>Team Members</h2>
+                <button class="btn btn--primary" id="addMemberBtn">Add Member</button>
+            </div>
+            
+            <div class="members-grid" id="membersGrid">
+                <!-- Members will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Investments Section -->
+        <section id="investments-section" class="section">
+            <div class="section-header">
+                <h2>Investment Overview</h2>
+                <button class="btn btn--primary" id="addInvestmentBtn">Add Investment</button>
+            </div>
+            
+            <div class="investment-summary">
+                <div class="investment-card">
+                    <h3>Total Investment</h3>
+                    <div class="investment-amount">₹3,73,000</div>
+                </div>
+                
+                <div class="ownership-chart-card">
+                    <h3>Ownership Distribution</h3>
+                    <div class="chart-container" style="position: relative; height: 300px;">
+                        <canvas id="ownershipChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Production Section -->
+        <section id="production-section" class="section">
+            <div class="section-header">
+                <h2>Production Management</h2>
+                <button class="btn btn--primary" id="addProductionBtn">Add Production Entry</button>
+            </div>
+            
+            <div class="production-stats">
+                <div class="stat-card">
+                    <h4>Total Batches</h4>
+                    <div class="stat-value">12</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Active Orders</h4>
+                    <div class="stat-value">8</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Production Cost</h4>
+                    <div class="stat-value">₹60,000</div>
+                </div>
+            </div>
+            
+            <div class="production-table">
+                <h3>Recent Production Costs</h3>
+                <table class="data-table" id="productionTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Production data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Other sections (Costs, Logistics, Sales, P&L, Network) -->
+        <section id="costs-section" class="section">
+            <div class="section-header">
+                <h2>Cost Management</h2>
+                <button class="btn btn--primary" id="addCostBtn">Add Cost Entry</button>
+            </div>
+            
+            <div class="cost-breakdown">
+                <div class="cost-category">
+                    <h4>Machinery Cost</h4>
+                    <div class="cost-amount">₹15,000</div>
+                </div>
+                <div class="cost-category">
+                    <h4>Labour Cost</h4>
+                    <div class="cost-amount">₹25,000</div>
+                </div>
+                <div class="cost-category">
+                    <h4>Sheet Cost</h4>
+                    <div class="cost-amount">₹8,000</div>
+                </div>
+                <div class="cost-category">
+                    <h4>Transportation</h4>
+                    <div class="cost-amount">₹12,000</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="logistics-section" class="section">
+            <div class="section-header">
+                <h2>Logistics & Transportation</h2>
+                <button class="btn btn--primary" id="addLogisticsBtn">Add Shipment</button>
+            </div>
+            
+            <div class="logistics-summary">
+                <div class="logistics-stat">
+                    <h4>Active Shipments</h4>
+                    <div class="stat-value">5</div>
+                </div>
+                <div class="logistics-stat">
+                    <h4>Transport Cost</h4>
+                    <div class="stat-value">₹12,000</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sales-section" class="section">
+            <div class="section-header">
+                <h2>Sales Management</h2>
+                <button class="btn btn--primary" id="addSaleBtn">Add Sale</button>
+            </div>
+            
+            <div class="sales-table">
+                <table class="data-table" id="salesTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Revenue</th>
+                            <th>Customer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sales data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="pl-section" class="section">
+            <div class="section-header">
+                <h2>Profit & Loss Statement</h2>
+                <select class="period-selector">
+                    <option value="monthly">Monthly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="yearly">Yearly</option>
+                </select>
+            </div>
+            
+            <div class="pl-statement">
+                <div class="pl-row">
+                    <span class="pl-label">Total Revenue</span>
+                    <span class="pl-value">₹2,85,000</span>
+                </div>
+                <div class="pl-row">
+                    <span class="pl-label">Cost of Goods Sold</span>
+                    <span class="pl-value negative">₹1,20,000</span>
+                </div>
+                <div class="pl-row gross-profit">
+                    <span class="pl-label">Gross Profit</span>
+                    <span class="pl-value">₹1,65,000</span>
+                </div>
+                <div class="pl-row">
+                    <span class="pl-label">Operating Expenses</span>
+                    <span class="pl-value negative">₹60,000</span>
+                </div>
+                <div class="pl-row net-profit">
+                    <span class="pl-label">Net Profit</span>
+                    <span class="pl-value">₹1,05,000</span>
+                </div>
+            </div>
+            
+            <div class="profit-distribution">
+                <h3>Profit Distribution by Ownership</h3>
+                <div class="distribution-list" id="profitDistribution">
+                    <!-- Profit distribution will be calculated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <section id="network-section" class="section">
+            <div class="section-header">
+                <h2>Network Partners</h2>
+                <div class="network-tabs">
+                    <button class="tab-btn active" data-tab="brokers">Brokers</button>
+                    <button class="tab-btn" data-tab="sellers">Sellers</button>
+                    <button class="tab-btn" data-tab="distributors">Distributors</button>
+                </div>
+            </div>
+            
+            <div class="network-content">
+                <div id="brokers-tab" class="tab-content active">
+                    <div class="network-cards" id="brokersGrid">
+                        <!-- Brokers will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div id="sellers-tab" class="tab-content">
+                    <div class="network-cards" id="sellersGrid">
+                        <!-- Sellers will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div id="distributors-tab" class="tab-content">
+                    <div class="network-cards" id="distributorsGrid">
+                        <!-- Distributors will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="memberModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Member</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="memberForm" class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <input type="text" class="form-control" name="role" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Investment Amount (₹)</label>
+                    <input type="number" class="form-control" name="investment" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" class="form-control" name="phone" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline modal-close">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
